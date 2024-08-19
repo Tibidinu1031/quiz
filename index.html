@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Introductory Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .quiz-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            max-width: 90%;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+        }
+        .option {
+            margin-bottom: 10px;
+        }
+        input[type="radio"] {
+            margin-right: 10px;
+        }
+        button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 100%;
+            cursor: pointer;
+        }
+        .option label {
+            cursor: pointer;
+        }
+        .option input[type="radio"] {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>Introductory Quiz</h1>
+        <div id="quiz"></div>
+        <button id="submit">Submit</button>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                question: "Are you a lifelong learner?",
+                options: ["Yes", "No"]
+            },
+            {
+                question: "Are you a student of the entrepreneurial \"game\"?",
+                options: ["Yes", "No"]
+            },
+            {
+                question: "Do you study other people's successful stories?",
+                options: ["Yes", "No"]
+            },
+            {
+                question: "What do you think about the following statement: self education > formal education?",
+                options: ["True", "False", "I have not thought about it"]
+            },
+            {
+                question: "What do you think about the following statement: Curiosity Quotient (CQ) + Passion Quotient (PQ) > Intelligence Quotient (IQ)?",
+                options: ["True", "False", "I have not thought about it"]
+            },
+            {
+                question: "What are you motivated by?",
+                options: ["Purpose/Mission", "Passion for something", "External things", "Proving others wrong"]
+            },
+            {
+                question: "Do you persist when things get tough?",
+                options: ["Yes", "No"]
+            },
+            {
+                question: "Are you on a personal development journey?",
+                options: ["Yes", "No"]
+            },
+            {
+                question: "Do you think success is more about the inner game or the outside hustle?",
+                options: ["Inner game", "Outside hustle", "A combination of both"]
+            },
+            {
+                question: "Have you ever taken personality tests?",
+                options: ["Yes", "No"]
+            },
+            {
+                question: "How much time do you invest in yourself per week?",
+                options: ["1-9h", "10-19h", "20h+", "I don't invest in myself"]
+            },
+            {
+                question: "On a scale of 1 (the lowest) to 10 (the highest) how gritty do you consider yourself?",
+                options: ["1-3", "4-6", "7-9", "absolute 10"]
+            },
+            {
+                question: "How much time do you work per week?",
+                options: ["40h", "40-60h", "60-80h", "80-100h"]
+            },
+            {
+                question: "How many books do you read in a year?",
+                options: ["<10", "10-30", "31-50"]
+            },
+            {
+                question: "Do you apply what you read from the books (either in business or personal life)?",
+                options: ["Yes", "No"]
+            },
+            {
+                question: "Does the idea of working a job for someone else scare you?",
+                options: ["Absolutely", "Why would it scare me?"]
+            },
+            {
+                question: "Do you have a 5 to 10 year vision?",
+                options: ["Yes", "No"]
+            },
+            {
+                question: "If you fail with your startup, do you start a new one or are you back to getting a job?",
+                options: ["Start a new one", "Getting back to a job"]
+            },
+            {
+                question: "Are you familiar with applying brain science in your startup?",
+                options: ["Yes", "No"]
+            },
+            {
+                question: "Do you believe that if you work hard enough you can achieve your goals?",
+                options: ["Yes", "No"]
+            },
+            {
+                question: "Do you think success is only destined for the \"select few\"?",
+                options: ["Yes", "No"]
+            },
+            {
+                question: "When it comes to entrepreneurship, do you have a all-in kind of mentality or are you more opportunistic?",
+                options: ["All-in", "Opportunistic"]
+            },
+            {
+                question: "Are you reverse engineering your vision and taking steps towards it in the present?",
+                options: ["Yes", "No"]
+            },
+            {
+                question: "Are you highly unemployable?",
+                options: ["Yes", "No"]
+            },
+            {
+                question: "Do you use AI?",
+                options: ["Yes", "No"]
+            },
+            {
+                question: "Do you integrate brain science in your startup activities?",
+                options: ["Yes", "No"]
+            },
+            {
+                question: "Are you willing (to learn to) apply brain science in your startup?",
+                options: ["Yes", "No", "Yes, but I will definitely need someone to help me with that"]
+            },
+            {
+                question: "Do you know how to approach your startup activities and challenges from a brain science angle?",
+                options: ["Yes", "No", "I have not thought about it"]
+            },
+            {
+                question: "Are you looking to expand your company?",
+                options: ["Yes", "No", "I have not thought about it"]
+            },
+            {
+                question: "Are you technical or non-technical?",
+                options: ["Technical", "Non-technical", "A combination of both"]
+            }
+        ];
+
+        let currentQuestion = 0;
+        const quizElement = document.getElementById('quiz');
+        const submitButton = document.getElementById('submit');
+
+        function loadQuestion() {
+            const question = quizData[currentQuestion];
+            let html = `<div class="question">${question.question}</div>`;
+            html += '<div class="options">';
+            for (let i = 0; i < question.options.length; i++) {
+                html += `
+                    <div class="option">
+                        <input type="radio" id="option${i}" name="answer" value="${question.options[i]}">
+                        <label for="option${i}">${question.options[i]}</label>
+                    </div>
+                `;
+            }
+            html += '</div>';
+            quizElement.innerHTML = html;
+        }
+
+        function nextQuestion() {
+            const selectedOption = document.querySelector('input[name="answer"]:checked');
+            if (selectedOption) {
+                currentQuestion++;
+                if (currentQuestion < quizData.length) {
+                    loadQuestion();
+                } else {
+                    quizElement.innerHTML = '<h2>Quiz completed!</h2>';
+                    submitButton.style.display = 'none';
+                }
+            } else {
+                alert('Please select an option before proceeding.');
+            }
+        }
+
+        submitButton.addEventListener('click', nextQuestion);
+
+        loadQuestion();
+    </script>
+</body>
+</html>
